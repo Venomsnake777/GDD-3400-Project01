@@ -36,14 +36,6 @@ namespace GDD3400.Project01
         private UnityEngine.Vector3 desiredPos;
         private UnityEngine.Vector3 patrolTarget;
 
-        // Level Bounds
-        public Transform xPlusBound;
-        public Transform xMinusBound;
-        public Transform zPlusBound;
-        public Transform zMinusBound;
-
-        private float minX, maxX, minZ, maxZ;
-
         private Rigidbody _rb;
 
         public void Awake()
@@ -95,13 +87,6 @@ namespace GDD3400.Project01
             // Get started at current position 
             patrolTarget = transform.position;
             desiredPos = patrolTarget;
-
-            // Calculate bounds from transforms
-            /*minX = xMinusBound.position.x;
-            maxX = xPlusBound.position.x;
-            minZ = zMinusBound.position.z;
-            maxZ = zPlusBound.position.z;*/
-
         }
 
         private void Update()
@@ -181,7 +166,7 @@ namespace GDD3400.Project01
                 UnityEngine.Vector3 sheepToGoal = (safeZone.position - targetSheep.position).normalized;
 
                 // Dog moves behind the sheep (opposite of goal)
-                float offset = 3f; // Distance behind the sheep to keep
+                float offset = 4f; // Distance behind the sheep to keep
                 desiredPos = targetSheep.position - sheepToGoal * offset;
             }
             else
@@ -191,7 +176,7 @@ namespace GDD3400.Project01
                 if ((transform.position - patrolTarget).magnitude < 0.5f)
                 {
                     // Radius away it will patrol
-                    float patrolRadius = 10f;
+                    float patrolRadius = 15f;
 
                     UnityEngine.Vector3 randomOffset
                         = new UnityEngine.Vector3(UnityEngine.Random.Range(-patrolRadius, patrolRadius),0, UnityEngine.Random.Range(-patrolRadius, patrolRadius));
@@ -199,9 +184,9 @@ namespace GDD3400.Project01
                     // Generate new patrol target relative to current position
                     patrolTarget = transform.position + randomOffset;
 
-                    // Clamp inside level bounds
-                    //patrolTarget.x = Mathf.Clamp(patrolTarget.x, minX, maxX);
-                    //patrolTarget.z = Mathf.Clamp(patrolTarget.z, minZ, maxZ);
+                    // Clamp inside level bounds (hard coded level bounds)
+                    patrolTarget.x = Mathf.Clamp(patrolTarget.x, -24, 24);
+                    patrolTarget.z = Mathf.Clamp(patrolTarget.z, -24, 24);
                 }
 
                 desiredPos = patrolTarget;
